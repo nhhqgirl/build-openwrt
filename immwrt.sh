@@ -353,10 +353,6 @@ apply_custom_settings() {
     # 更改argon主题背景
     cp -f $GITHUB_WORKSPACE/images/bg1.jpg feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
 
-    # 删除主题默认设置
-    # find $destination_dir/luci-theme-*/ -type f -name '*luci-theme-*' -exec sed -i '/set luci.main.mediaurlbase/d' {} +
-
-
     # 修改qca-nss-drv启动顺序
     drv_path="feeds/nss_packages/qca-nss-drv/files/qca-nss-drv.init"
     if [ -f "$drv_path" ]; then
