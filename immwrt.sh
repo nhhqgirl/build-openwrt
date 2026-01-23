@@ -304,43 +304,14 @@ add_custom_packages() {
     [ -d "$destination_dir" ] || mkdir -p "$destination_dir"
 
     # 基础插件
-    clone_dir openwrt-23.05 https://github.com/coolsnowwolf/luci luci-app-adguardhome
-    clone_all https://github.com/lwb1978/openwrt-gecoosac
-    clone_dir https://github.com/sirpdboy/luci-app-ddns-go ddns-go luci-app-ddns-go
-    clone_all https://github.com/sbwml/luci-app-alist
-    clone_all https://github.com/sbwml/luci-app-mosdns
     git_clone https://github.com/sbwml/packages_lang_golang golang
-    clone_all https://github.com/linkease/istore-ui
-    clone_all https://github.com/linkease/istore luci
-    clone_all https://github.com/brvphoenix/luci-app-wrtbwmon
-    clone_all https://github.com/brvphoenix/wrtbwmon
 
     # 科学上网插件
-    clone_all https://github.com/fw876/helloworld
-    clone_all https://github.com/Openwrt-Passwall/openwrt-passwall-packages
-    clone_all https://github.com/Openwrt-Passwall/openwrt-passwall
-    clone_all https://github.com/Openwrt-Passwall/openwrt-passwall2
     clone_dir https://github.com/vernesong/OpenClash luci-app-openclash
-    clone_all https://github.com/nikkinikki-org/OpenWrt-nikki
-    clone_all https://github.com/nikkinikki-org/OpenWrt-momo
-    clone_dir https://github.com/QiuSimons/luci-app-daed daed luci-app-daed
-    git_clone https://github.com/immortalwrt/homeproxy luci-app-homeproxy
-    clone_dir https://github.com/sbwml/openwrt_helloworld xray-core
 
     # Themes
-    git_clone https://github.com/kiddin9/luci-theme-edge
     git_clone https://github.com/jerrykuku/luci-theme-argon
-    git_clone https://github.com/jerrykuku/luci-app-argon-config
-    git_clone https://github.com/eamonxg/luci-theme-aurora
-    git_clone https://github.com/eamonxg/luci-app-aurora-config
-    git_clone https://github.com/sirpdboy/luci-theme-kucat
-    git_clone https://github.com/sirpdboy/luci-app-kucat-config
 
-    # 晶晨宝盒
-    clone_all https://github.com/ophub/luci-app-amlogic
-    sed -i "s|firmware_repo.*|firmware_repo 'https://github.com/$GITHUB_REPOSITORY'|g" $destination_dir/luci-app-amlogic/root/etc/config/amlogic
-    # sed -i "s|kernel_path.*|kernel_path 'https://github.com/ophub/kernel'|g" $destination_dir/luci-app-amlogic/root/etc/config/amlogic
-    sed -i "s|ARMv8|$RELEASE_TAG|g" $destination_dir/luci-app-amlogic/root/etc/config/amlogic
 
     # 修复Makefile路径
     find "$destination_dir" -type f -name "Makefile" | xargs sed -i \
@@ -375,8 +346,6 @@ apply_custom_settings() {
     # 更改默认shell为zsh
     # sed -i 's/\/bin\/ash/\/usr\/bin\/zsh/g' package/base-files/files/etc/passwd
 
-    # ttyd免登录
-    sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
     # 设置root用户密码为password
     sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7:::/g' package/base-files/files/etc/shadow
@@ -387,9 +356,6 @@ apply_custom_settings() {
     # 删除主题默认设置
     # find $destination_dir/luci-theme-*/ -type f -name '*luci-theme-*' -exec sed -i '/set luci.main.mediaurlbase/d' {} +
 
-    # 设置nlbwmon独立菜单
-    sed -i 's/services\/nlbw/nlbw/g; /path/s/admin\///g' feeds/luci/applications/luci-app-nlbwmon/root/usr/share/luci/menu.d/luci-app-nlbwmon.json
-    sed -i 's/services\///g' feeds/luci/applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/config.js
 
     # 修改qca-nss-drv启动顺序
     drv_path="feeds/nss_packages/qca-nss-drv/files/qca-nss-drv.init"
